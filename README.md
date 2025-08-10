@@ -2,8 +2,20 @@
 
 ## Introduction
 
-SCREAM++ (Side-Chain Rotamer Excitation Analysis Method) is a computational tool designed for high-accuracy protein side-chain placement and structural redesign. The method is predicated on the use of extensive rotamer libraries to sample conformational space. Its primary innovation is the **Flat-Bottom Strategy**, a modification to the potential energy function that compensates for the discrete nature of these libraries. By introducing a "flat" region in the repulsive part of the van der Waals and hydrogen bonding potentials, the scoring function avoids penalizing near-native conformations that might otherwise be discarded due to minor steric clashes inherent in discrete sampling. This approach enables the accurate prediction of side-chain placements, which is a critical step in protein structure prediction, protein design, and molecular docking studies.
+**SCREAM++** is an enhanced, high-performance software package for automated protein side-chain placement. It builds upon the scientific foundation of the original SCREAM (Side-Chain Rotamer Excitation Analysis Method), which predicts accurate side-chain conformations using rotamer libraries and a unique flat-bottom potential strategy. This new generation of SCREAM has been completely re-engineered from the ground up in **Rust** for superior memory safety, performance, and modern development practices.
 
+The core mission of SCREAM++ is to provide a robust, reliable, and easy-to-use tool for researchers in computational biology, structural biology, and drug design.
+
+### Where Does SCREAM++ Fit in the Workflow?
+
+For newcomers to computational structural biology, it's helpful to see where a tool like SCREAM++ is used. A typical workflow looks like this:
+
+**X-ray Crystallography → Structure Preparation → Side-Chain Placement (SCREAM++) → Further Analysis (e.g., Docking)**
+
+1.  **Get a Structure**: Scientists determine a protein's 3D structure using methods like X-ray crystallography, resulting in a PDB file.
+2.  **Prepare the Structure**: This raw structure needs cleaning. This involves removing water molecules, adding missing hydrogen atoms, and fixing potential issues.
+3.  **Optimize Side-Chains (SCREAM++)**: This is where SCREAM++ shines. Even after preparation, the positions of flexible side-chains might not be in their most stable, lowest-energy state. SCREAM++ takes the prepared structure and repacks the side-chains to find a more accurate and energetically favorable conformation.
+4.  **Downstream Applications**: A well-optimized structure is crucial for subsequent steps, such as simulating how a drug molecule (ligand) might bind to the protein (molecular docking).
 ## Quick Start Guide
 
 This guide provides a step-by-step walkthrough for performing a standard side-chain placement on a sample protein structure.
@@ -16,7 +28,7 @@ Before starting, you must download the SCREAM++ command-line interface (CLI) bin
 
 ### 2. Prepare Sample Files
 
-For this tutorial, we will use a prepared BGF (Biosym Graphics File) of [PDB ID `1AIK`](https://www.rcsb.org/structure/1AIK).
+For this tutorial, we will use a prepared BGF (Biosym Graphics File) of PDB ID `1A8D`, the acyl-CoA binding protein from *Escherichia coli*.
 
 - **Download Sample Structure**: [An example protein structure input](https://github.com/caltechmsc/screampp-docs/blob/main/input.bgf).
 
