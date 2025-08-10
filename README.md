@@ -25,10 +25,6 @@ For this tutorial, we will use a prepared BGF (Biosym Graphics File) of [PDB ID 
 ```toml
 # config.toml: A basic configuration for side-chain placement.
 
-# Path to the residue topology registry. 'default' is a logical name
-# that points to the standard registry downloaded by the CLI.
-topology-registry-path = "default"
-
 [forcefield]
 # The 's-factor' controls the extent of the flat-bottom potential.
 # A value around 1.0 is generally optimal for libraries with ~1.0 Å diversity.
@@ -43,6 +39,10 @@ delta-params-path = "rmsd-1.0"
 # Logical name for the rotamer library to use.
 # Format is 'charge_scheme@diversity'.
 rotamer-library = "charmm@rmsd-1.0"
+
+# Path to the rotamer placement registry. 'default' is a logical name
+# that points to the standard registry downloaded by the CLI.
+placement-registry = "default"
 
 [optimization]
 # The number of final, unique, low-energy solutions to generate.
