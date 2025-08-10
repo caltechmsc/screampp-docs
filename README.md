@@ -28,7 +28,7 @@ Before starting, you must download the SCREAM++ command-line interface (CLI) bin
 
 ### 2. Prepare Sample Files
 
-For this tutorial, we will use a [prepared BGF (Biosym Graphics File) of PDB ID `1A8D`](https://www.rcsb.org/structure/1AIK). This is the core structure of the gp41 protein from the Human Immunodeficiency Virus (HIV-1), which is crucial for how the virus infects cells. For this experiment, the protein sample was produced using *Escherichia coli* as an expression system.
+For this tutorial, we will use a prepared BGF (Biosym Graphics File) of [PDB ID `1A8D`](https://www.rcsb.org/structure/1AIK). This is the core structure of the gp41 protein from the Human Immunodeficiency Virus (HIV-1), which is crucial for how the virus infects cells. For this experiment, the protein sample was produced using *Escherichia coli* as an expression system.
 
 - **Download Sample Structure**: [An example protein structure input](https://github.com/caltechmsc/screampp-docs/blob/main/input.bgf).
 
