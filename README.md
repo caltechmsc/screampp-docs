@@ -28,7 +28,7 @@ Before starting, you must download the SCREAM++ command-line interface (CLI) bin
 
 ### 2. Prepare Sample Files
 
-For this tutorial, we will use a prepared BGF (Biosym Graphics File) of PDB ID `1A8D`, the acyl-CoA binding protein from *Escherichia coli*.
+For this tutorial, we will use a [prepared BGF (Biosym Graphics File) of PDB ID `1A8D`](https://www.rcsb.org/structure/1AIK), the acyl-CoA binding protein from *Escherichia coli*.
 
 - **Download Sample Structure**: [An example protein structure input](https://github.com/caltechmsc/screampp-docs/blob/main/input.bgf).
 
