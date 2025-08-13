@@ -1,4 +1,4 @@
-# SCREAM++ Usage Guidelines
+# SCREAM++ Usage Guidelines (v0.2.0-alpha.1)
 
 ## Introduction
 
@@ -16,6 +16,7 @@ For newcomers to computational structural biology, it's helpful to see where a t
 2.  **Prepare the Structure**: This raw structure needs cleaning. This involves removing water molecules, adding missing hydrogen atoms, and fixing potential issues.
 3.  **Optimize Side-Chains (SCREAM++)**: This is where SCREAM++ shines. Even after preparation, the positions of flexible side-chains might not be in their most stable, lowest-energy state. SCREAM++ takes the prepared structure and repacks the side-chains to find a more accurate and energetically favorable conformation.
 4.  **Downstream Applications**: A well-optimized structure is crucial for subsequent steps, such as simulating how a drug molecule (ligand) might bind to the protein (molecular docking).
+
 ## Quick Start Guide
 
 This guide provides a step-by-step walkthrough for performing a standard side-chain placement on a sample protein structure.
@@ -28,14 +29,18 @@ Before starting, you must download the SCREAM++ command-line interface (CLI) bin
 
 ### 2. Prepare Sample Files
 
-For this tutorial, we will use a prepared BGF (Biosym Graphics File) of [PDB ID `1A8D`](https://www.rcsb.org/structure/1AIK). This is the core structure of the gp41 protein from the Human Immunodeficiency Virus (HIV-1), which is crucial for how the virus infects cells. For this experiment, the protein sample was produced using *Escherichia coli* as an expression system.
+For this tutorial, we will use a prepared BGF (Biosym Graphics File) of [PDB ID `1A8D`](https://www.rcsb.org/structure/1A8D). This is the core structure of the gp41 protein from the Human Immunodeficiency Virus (HIV-1), which is crucial for how the virus infects cells. For this experiment, the protein sample was produced using _Escherichia coli_ as an expression system.
 
 - **Download Sample Structure**: [An example protein structure input](https://github.com/caltechmsc/screampp-docs/blob/main/input.bgf).
 
 - **Create a Configuration File**: Create a file named `config.toml` and paste the following content into it. This configuration instructs SCREAM++ to optimize all residues using a standard forcefield and rotamer library.
 
 ```toml
-# config.toml: A basic configuration for side-chain placement.
+# config.toml: A basic configuration for side-chain placement (v0.2 format).
+
+# Path to the residue topology definition file. 'default' is a logical name
+# that points to the standard registry downloaded by the CLI.
+topology-registry-path = "default"
 
 [forcefield]
 # The 's-factor' controls the extent of the flat-bottom potential.
@@ -52,16 +57,12 @@ delta-params-path = "rmsd-1.0"
 # Format is 'charge_scheme@diversity'.
 rotamer-library = "charmm@rmsd-1.0"
 
-# Path to the rotamer placement registry. 'default' is a logical name
-# that points to the standard registry downloaded by the CLI.
-placement-registry = "default"
-
 [optimization]
 # The number of final, unique, low-energy solutions to generate.
 num-solutions = 1
 
 [residues-to-optimize]
-# Specifies which residues to modify. 'All' considers every residue in the system
+# Specifies which residues to modify. 'all' considers every residue in the system
 # that has a corresponding entry in the rotamer library.
 type = "all"
 ```
@@ -128,6 +129,12 @@ _(Imagine Figure 3 here: Overlay of the original structure in green and the opti
 
 The `config.toml` file provides fine-grained control over the SCREAM++ workflow. Below is a detailed explanation of the primary sections and their parameters.
 
+### `topology-registry-path`
+
+This top-level setting defines the residue topology for the entire run.
+
+- `topology-registry-path` (String): Path or logical name (`"default"`) for the TOML file that defines the topology of each residue (i.e., which atoms are backbone vs. sidechain).
+
 ### `[forcefield]`
 
 This section controls the energy function used for scoring.
@@ -135,10 +142,6 @@ This section controls the energy function used for scoring.
 - `s-factor` (Float): The scaling factor for the flat-bottom potential. It modulates the `delta` value (`Δ = μ + s ⋅ σ`). This is the most critical parameter for tuning accuracy based on the coarseness of the rotamer library.
 - `forcefield-path` (String): Path or logical name (e.g., `"lj-12-6@0.4"`) for the file containing VDW and H-bond parameters.
 - `delta-params-path` (String): Path or logical name (e.g., `"rmsd-1.0"`) for the CSV file containing the `mu` and `sigma` values for each atom type, used to calculate the `delta` for the flat-bottom potential.
-
-### `topology-registry-path`
-
-(String): Path or logical name (`"default"`) for the TOML file that defines the topology of each residue (i.e., which atoms are backbone vs. sidechain).
 
 ### `[sampling]`
 
@@ -158,6 +161,7 @@ This section controls the optimization algorithm.
   - `final-temperature` (Float): Temperature at which to stop annealing.
   - `cooling-rate` (Float): Multiplicative cooling factor (e.g., `0.95`).
   - `steps-per-temperature` (Integer): Number of Monte Carlo steps at each temperature.
+- `final-refinement-iterations` (Integer): Number of final local optimization passes. Default is `2`.
 
 ### `[residues-to-optimize]`
 
@@ -165,14 +169,14 @@ This section specifies which residues' side-chains will be modified.
 
 - `type` (String): The method for selecting residues. Can be one of:
 
-  1.  **`"All"`**: Optimizes all protein residues found in the rotamer library.
+  1.  **`"all"`**: Optimizes all protein residues found in the rotamer library.
 
       ```toml
       [residues-to-optimize]
       type = "all"
       ```
 
-  2.  **`"List"`**: Specifies residues to include or exclude explicitly.
+  2.  **`"list"`**: Specifies residues to include or exclude explicitly.
 
       ```toml
       [residues-to-optimize]
@@ -182,13 +186,13 @@ This section specifies which residues' side-chains will be modified.
           { chain-id = 'A', residue-number = 12 },
           { chain-id = 'A', residue-number = 15 },
       ]
-      # Exclude residue 50 on chain B from optimization, even if it's near a ligand.
+      # Exclude residue 50 on chain B from optimization.
       exclude = [
           { chain-id = 'B', residue-number = 50 },
       ]
       ```
 
-  3.  **`"LigandBindingSite"`**: Optimizes all protein residues within a certain radius of a specified ligand.
+  3.  **`"ligand-binding-site"`**: Optimizes all protein residues within a certain radius of a specified ligand. Note the `kebab-case` for field names.
       ```toml
       [residues-to-optimize]
       type = "ligand-binding-site"
